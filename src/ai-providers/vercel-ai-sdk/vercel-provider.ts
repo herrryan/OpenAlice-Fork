@@ -63,9 +63,9 @@ export class VercelAIProvider implements AIProvider {
   async askWithSession(prompt: string, session: SessionStore, _opts?: AskOptions): Promise<ProviderResult> {
     const agent = await this.resolveAgent()
 
-    // Fire event so ConnectorCenter can track the last-used channel
+    // Fire event so ConnectorCenter can track the last-used channel, but ignore internal sessions
     const [channel, to] = session.id.split('/');
-    if (channel && to) {
+    if (channel && to && channel !== 'cron' && channel !== 'heartbeat') {
       this.eventLog.append('message.received', { channel, to });
     }
 
